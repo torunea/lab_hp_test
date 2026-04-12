@@ -202,6 +202,36 @@
                 loadingScreen.classList.add('hidden');
             });
 
+            // ------------------------------------------------
+            // タッチデバイス: 1回目タップでクリッピング、2回目でページ遷移
+            // ------------------------------------------------
+            const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+            if (isTouchDevice) {
+                // グリッド内のタップ（動的生成カードにも対応するためイベント委譲）
+                grid.addEventListener('click', function (e) {
+                    const card = e.target.closest('.project-card');
+                    if (!card) return;
+
+                    const imageSquare = card.querySelector('.fixed-image-square');
+                    if (!imageSquare.classList.contains('touched')) {
+                        // 1回目: クリッピング適用（ページ遷移は阻止）
+                        e.preventDefault();
+                        grid.querySelectorAll('.fixed-image-square.touched')
+                            .forEach(el => el.classList.remove('touched'));
+                        imageSquare.classList.add('touched');
+                    }
+                    // 2回目: .touched が付いている → デフォルト動作（リンク遷移）
+                });
+
+                // グリッド外をタップしたらクリッピングを解除
+                document.addEventListener('click', function (e) {
+                    if (!e.target.closest('#projects-grid')) {
+                        grid.querySelectorAll('.fixed-image-square.touched')
+                            .forEach(el => el.classList.remove('touched'));
+                    }
+                });
+            }
+
             // タグフィルターのイベント
             const tagFilters = document.querySelectorAll('.tag-filter');
             tagFilters.forEach(filter => {
