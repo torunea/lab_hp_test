@@ -23,16 +23,10 @@
  */
 
 // ============================================================
-// ★ スプレッドシートIDをここに入力してください ★
-//   「ウェブに公開」後に表示されるURLの /d/ 〜 /pub の間の文字列です
+// ★ 「ウェブに公開」で取得した CSV の URL をここに貼り付けてください ★
 // ============================================================
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';
-
-// シートのGID（通常は最初のシートが 0。タブURLの gid= の値で確認できます）
-const SHEET_GID = '0';
-
 const SHEETS_CSV_URL =
-    `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/pub?gid=${SHEET_GID}&single=true&output=csv`;
+    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSrUGsdSPQluoFG-w7ZZNdarexLG9vR89nYD49_yhO8E2vxcQqGOP3cIafOq4oyiGZoiJC7-2Orw4s/pub?gid=0&single=true&output=csv';
 
 /**
  * スプレッドシートからプロジェクト一覧を取得してパースする
