@@ -1,6 +1,6 @@
 # new-web-site
 
-研究室のプロジェクトを紹介するための[サイト](https://labshio.github.io/new-web-site/)です。
+研究室のプロジェクトを紹介するための[サイト](https://torunea.github.io/lab_hp_test/)です。
 
 プロジェクトの追加・編集は **Google スプレッドシートのみ** で行います。HTMLファイルの編集は不要です。
 
