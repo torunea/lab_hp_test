@@ -160,31 +160,47 @@
         // 初期化
         // ------------------------------------------------
         document.addEventListener('DOMContentLoaded', function () {
-            // ローディング画面を2秒後にフェードアウト
             const loadingScreen = document.getElementById('loading');
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-            }, 2000);
-
             const grid = document.getElementById('projects-grid');
 
-            // スプレッドシートからデータを取得してカードを生成
-            fetchProjects()
+            // サイト名アニメーション（1.5s）が完了するまでの最低表示時間
+            const minDisplay = new Promise(resolve => setTimeout(resolve, 1500));
+
+            // スプレッドシート取得 → カード生成 → 全画像の読み込み完了を待つ
+            const contentReady = fetchProjects()
                 .then(projects => {
                     grid.innerHTML = ''; // 「読み込み中...」を消去
                     projects.forEach(project => {
                         grid.appendChild(createProjectCard(project));
                     });
                     sortProjectsByDate('desc'); // 初期表示は新しい順
+
+                    // グリッド内の全画像が load または error になるまで待つ
+                    const images = Array.from(grid.querySelectorAll('img'));
+                    return Promise.all(
+                        images.map(img => new Promise(resolve => {
+                            if (img.complete) {
+                                resolve();
+                            } else {
+                                img.addEventListener('load', resolve);
+                                img.addEventListener('error', resolve); // 画像エラーでも続行
+                            }
+                        }))
+                    );
                 })
                 .catch(err => {
                     grid.innerHTML =
                         '<p style="grid-column: 1 / -1; padding: 20px; color: #888;">' +
                         'プロジェクトの読み込みに失敗しました。<br>' +
-                        'js/sheets.js の SPREADSHEET_ID を確認してください。' +
+                        'js/sheets.js のURLを確認してください。' +
                         '</p>';
                     console.error('スプレッドシート読み込みエラー:', err);
                 });
+
+            // 最低表示時間 AND コンテンツ読み込み完了、両方を満たしたらフェードアウト
+            Promise.all([minDisplay, contentReady]).then(() => {
+                loadingScreen.classList.add('hidden');
+            });
 
             // タグフィルターのイベント
             const tagFilters = document.querySelectorAll('.tag-filter');
