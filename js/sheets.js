@@ -62,7 +62,8 @@ function parseCSV(csvText) {
             });
             return project;
         })
-        .filter(p => p.id && p.title); // id と title は必須
+        .filter(p => p.id && p.title)           // id と title は必須
+        .filter(p => p.published !== 'FALSE'); // published 列が FALSE のものは非表示
 }
 
 /**

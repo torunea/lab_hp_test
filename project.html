@@ -87,11 +87,10 @@
             // ページタイトル更新
             document.title = `${project.title} | shiozaki_lab_projects`;
 
-            // 説明文を段落に分割（セル内改行 \n で区切る）
             const content = document.getElementById('project-content');
             content.innerHTML = '';
 
-            // project-header
+            // ---- project-header ----
             const header = document.createElement('div');
             header.className = 'project-header';
 
@@ -106,7 +105,7 @@
             header.appendChild(titleEl);
             header.appendChild(dateEl);
 
-            // project-main-content
+            // ---- project-main-content ----
             const mainContent = document.createElement('div');
             mainContent.className = 'project-main-content';
 
@@ -114,12 +113,53 @@
             const imageSide = document.createElement('div');
             imageSide.className = 'project-image-side';
 
-            const img = document.createElement('img');
-            img.src = project.image_url;
-            img.alt = project.title;
-            img.className = 'project-image-main';
+            // メイン画像
+            const mainImg = document.createElement('img');
+            mainImg.src = project.image_url;
+            mainImg.alt = project.title;
+            mainImg.className = 'project-image-main';
+            imageSide.appendChild(mainImg);
 
-            imageSide.appendChild(img);
+            // サムネイルギャラリー（常に5スロット固定）
+            const thumbUrls = [
+                project.image_url_2,
+                project.image_url_3,
+                project.image_url_4,
+                project.image_url_5,
+                project.image_url_6,
+            ];
+
+            const thumbsContainer = document.createElement('div');
+            thumbsContainer.className = 'gallery-thumbs';
+
+            thumbUrls.forEach(url => {
+                const slot = document.createElement('div');
+
+                if (url && url.trim()) {
+                    slot.className = 'gallery-thumb';
+                    const thumbImg = document.createElement('img');
+                    thumbImg.src = url;
+                    thumbImg.alt = '';
+                    slot.appendChild(thumbImg);
+
+                    // クリックでメイン画像と入れ替え（フェード付き）
+                    slot.addEventListener('click', function () {
+                        const prevSrc = mainImg.src;
+                        mainImg.classList.add('swapping');
+                        setTimeout(() => {
+                            mainImg.src = thumbImg.src;
+                            thumbImg.src = prevSrc;
+                            mainImg.classList.remove('swapping');
+                        }, 200);
+                    });
+                } else {
+                    slot.className = 'gallery-thumb gallery-thumb--empty';
+                }
+
+                thumbsContainer.appendChild(slot);
+            });
+
+            imageSide.appendChild(thumbsContainer);
 
             // テキストサイド
             const textSide = document.createElement('div');
@@ -134,9 +174,7 @@
                 .filter(line => line.trim());
 
             if (paragraphs.length === 0) {
-                const p = document.createElement('p');
-                p.textContent = '';
-                description.appendChild(p);
+                description.appendChild(document.createElement('p'));
             } else {
                 paragraphs.forEach(line => {
                     const p = document.createElement('p');

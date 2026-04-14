@@ -62,6 +62,52 @@
     font-size: 15px;
 }
 
+/* ================================================
+   サムネイルギャラリー
+   ================================================ */
+
+/* メイン画像のトランジション（入れ替え時にスムーズに） */
+.project-image-main {
+    transition: opacity 0.2s ease;
+}
+
+.project-image-main.swapping {
+    opacity: 0;
+}
+
+/* サムネイル列（常に5スロット固定） */
+.gallery-thumbs {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+/* 各サムネイルスロット（空でも正方形を維持） */
+.gallery-thumb {
+    flex: 1;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: #dedad0; /* 空スロットの背景色 */
+    cursor: pointer;
+}
+
+.gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.2s ease;
+}
+
+.gallery-thumb img:hover {
+    opacity: 0.75;
+}
+
+/* 空スロット（画像なし）はクリック不可 */
+.gallery-thumb--empty {
+    cursor: default;
+}
+
 @media (max-width: 900px) {
     .project-main-content {
         flex-direction: column;
