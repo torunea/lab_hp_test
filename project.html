@@ -120,42 +120,44 @@
             mainImg.className = 'project-image-main';
             imageSide.appendChild(mainImg);
 
-            // サムネイルギャラリー（常に5スロット固定）
-            const thumbUrls = [
+            // サムネイルギャラリー（5スロット固定）
+            // スロット1 = メイン画像、スロット2〜5 = 追加画像
+            const thumbDefs = [
+                project.image_url,
                 project.image_url_2,
                 project.image_url_3,
                 project.image_url_4,
                 project.image_url_5,
-                project.image_url_6,
             ];
 
             const thumbsContainer = document.createElement('div');
             thumbsContainer.className = 'gallery-thumbs';
 
-            thumbUrls.forEach(url => {
+            const thumbSlots = [];
+
+            thumbDefs.forEach((url, i) => {
                 const slot = document.createElement('div');
 
                 if (url && url.trim()) {
                     slot.className = 'gallery-thumb';
+                    if (i === 0) slot.classList.add('active'); // 初期選択はスロット1
+
                     const thumbImg = document.createElement('img');
                     thumbImg.src = url;
                     thumbImg.alt = '';
                     slot.appendChild(thumbImg);
 
-                    // クリックでメイン画像と入れ替え（フェード付き）
+                    // クリックでメイン画像を即時更新
                     slot.addEventListener('click', function () {
-                        const prevSrc = mainImg.src;
-                        mainImg.classList.add('swapping');
-                        setTimeout(() => {
-                            mainImg.src = thumbImg.src;
-                            thumbImg.src = prevSrc;
-                            mainImg.classList.remove('swapping');
-                        }, 200);
+                        mainImg.src = url;
+                        thumbSlots.forEach(s => s.classList.remove('active'));
+                        slot.classList.add('active');
                     });
                 } else {
                     slot.className = 'gallery-thumb gallery-thumb--empty';
                 }
 
+                thumbSlots.push(slot);
                 thumbsContainer.appendChild(slot);
             });
 

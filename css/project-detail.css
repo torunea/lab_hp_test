@@ -66,15 +66,6 @@
    サムネイルギャラリー
    ================================================ */
 
-/* メイン画像のトランジション（入れ替え時にスムーズに） */
-.project-image-main {
-    transition: opacity 0.2s ease;
-}
-
-.project-image-main.swapping {
-    opacity: 0;
-}
-
 /* サムネイル列（常に5スロット固定） */
 .gallery-thumbs {
     display: flex;
@@ -89,6 +80,13 @@
     overflow: hidden;
     background-color: #dedad0; /* 空スロットの背景色 */
     cursor: pointer;
+    outline: 2px solid transparent;
+    outline-offset: -2px;
+}
+
+/* 選択中スロット */
+.gallery-thumb.active {
+    outline-color: #3f4691;
 }
 
 .gallery-thumb img {
@@ -96,16 +94,17 @@
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: opacity 0.2s ease;
+    opacity: 1;
 }
 
-.gallery-thumb img:hover {
+.gallery-thumb:not(.active) img:hover {
     opacity: 0.75;
 }
 
 /* 空スロット（画像なし）はクリック不可 */
 .gallery-thumb--empty {
     cursor: default;
+    outline: none;
 }
 
 @media (max-width: 900px) {
